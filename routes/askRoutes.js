@@ -73,9 +73,9 @@ router.post("/", upload.single("image"), async (req, res) => {
     5. Provide a clear, concise, and accurate answer.
     6. If you're unsure about any aspect, state your uncertainty and provide the most helpful information you can.
     7. IMPORTANT: Throughout your answer, whenever you use information from the manual, immediately follow it with the page number in parentheses. For example: "The Bluetooth connection process (Page 312) involves..."
-    8. At the end of your answer, include two separate statements:
-       a) "This information is primarily based on [specify source: manual pages X, Y, Z / general automotive knowledge / image analysis / combination of sources]."
-       b) "The following manual pages were consulted: [list all page numbers provided, even if not all were used in the answer]."
+    8. At the end of your answer, include two separate statements, each starting on a new line and preceded by "SOURCE_INFO:":
+       a) SOURCE_INFO: This information is primarily based on [specify source: manual pages X, Y, Z / general automotive knowledge / image analysis / combination of sources].
+       b) SOURCE_INFO: The following manual pages were consulted: [list all page numbers provided, even if not all were used in the answer].
     
     Remember, it is crucial to clearly indicate the source of each piece of information in your answer, especially when it comes from the manual pages provided.`;
 
