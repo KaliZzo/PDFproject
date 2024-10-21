@@ -1,24 +1,33 @@
+// App.jsx
+
 import React, { useState } from "react";
 import axios from "axios";
 
 const App = () => {
+  const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [pages, setPages] = useState([]);
   const [pdfUrl, setPdfUrl] = useState("");
+  const [image, setImage] = useState(null);
 
-  const handleAskQuestion = async (question) => {
+  const handleAskQuestion = async () => {
+    const formData = new FormData();
+    formData.append("question", question);
+    if (image) {
+      formData.append("image", image); // Attach image if provided
+    }
+
     try {
-      const response = await axios.post("http://localhost:3000/ask", {
-        question,
+      const response = await axios.post("http://localhost:3000/ask", formData, {
+        headers: { "Content-Type": "multipart/form-data" }, // Required for image upload
       });
       const { answer, pages, pagesPDF } = response.data;
 
       setAnswer(answer);
       setPages(pages);
-
       setPdfUrl(
         `http://localhost:3000/pdf/Toyota%20corolla%20Manual%202020.pdf`
-      ); // Link to full PDF
+      );
     } catch (error) {
       console.error("Error asking question:", error);
     }
@@ -31,21 +40,31 @@ const App = () => {
       <div className="mb-4">
         <input
           type="text"
-          id="question"
           className="border border-gray-300 rounded p-2 w-full"
           placeholder="Ask a question..."
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleAskQuestion(e.target.value);
-            }
-          }}
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
         />
       </div>
 
-      <div className="bg-gray-100 p-4 rounded">
+      <div className="mb-4">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])} // Capture image
+        />
+      </div>
+
+      <button
+        onClick={handleAskQuestion}
+        className="bg-blue-500 text-white p-2 rounded"
+      >
+        Ask
+      </button>
+
+      <div className="bg-gray-100 p-4 rounded mt-4">
         <h2 className="text-xl font-bold">Answer:</h2>
-        <p className="text-gray-700 mb-4 whitespace-pre-line">{answer}</p>{" "}
-        {/* More readable text */}
+        <p className="text-gray-700 mb-4">{answer}</p>
         {pages.length > 0 && (
           <div>
             <h3 className="text-lg font-semibold">
